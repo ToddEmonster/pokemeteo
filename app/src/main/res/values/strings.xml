@@ -5,4 +5,5 @@
     <string name="city_temp">17°C</string>
     <string name="favoris">Favoris</string>
     <string name="morpheo">Morpheo</string>
+    <string name="pas_connexion">Pas de connexion internet</string>
 </resources>
