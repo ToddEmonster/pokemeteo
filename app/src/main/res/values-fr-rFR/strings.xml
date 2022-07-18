@@ -7,4 +7,8 @@
     <string name="favoris">Favoris</string>
     <string name="morpheo">Morpheo</string>
     <string name="pas_connexion">Pas de connexion internet</string>
+    <string name="message">Message :</string>
+    <string name="votre_message">Votre message</string>
+    <string name="title_activity_favorite">FavoriteActivity</string>
+    <string name="action_settings">Paramètres</string>
 </resources>

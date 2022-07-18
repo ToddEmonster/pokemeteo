@@ -50,6 +50,15 @@
                     android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/edit_text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/big_temp"
+            android:layout_centerInParent="true"
+            android:text="@string/votre_message"/>
+
         <Button
             android:id="@+id/button_favoris"
             android:layout_width="wrap_content"

@@ -3,7 +3,11 @@
     <string name="city_name">Antananarivo</string>
     <string name="city_desc">Mostly cloudy</string>
     <string name="city_temp">17°C</string>
-    <string name="favoris">Favoris</string>
-    <string name="morpheo">Morpheo</string>
-    <string name="pas_connexion">Pas de connexion internet</string>
+    <string name="favoris">Favorites</string>
+    <string name="morpheo">Castform</string>
+    <string name="pas_connexion">No internet connection</string>
+    <string name="title_activity_favorite">FavoriteActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="message">Message :</string>
+    <string name="votre_message">Your message</string>
 </resources>
