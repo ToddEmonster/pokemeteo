@@ -3,4 +3,6 @@
     <string name="city_name">Antananarivo</string>
     <string name="city_desc">Mostly cloudy</string>
     <string name="city_temp">17°C</string>
+    <string name="favoris">Favoris</string>
+    <string name="morpheo">Morpheo</string>
 </resources>

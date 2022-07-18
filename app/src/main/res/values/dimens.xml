@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin">16sp</dimen>
+    <dimen name="margin_big">32sp</dimen>
+    <dimen name="padding">8sp</dimen>
+    <dimen name="big_title">28sp</dimen>
+    <dimen name="big_temp">52sp</dimen>
+    <dimen name="title">24sp</dimen>
+    <dimen name="subtitle">20sp</dimen>
+    <dimen name="app_bar_height">180sp</dimen>
+    <dimen name="fab_margin">16sp</dimen>
+    <dimen name="text_margin">16sp</dimen>
+</resources>
