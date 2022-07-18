@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PokeMeteo</string>
     <string name="city_name">Antananarivo</string>
-    <string name="city_desc">Mostly cloudy</string>
+    <string name="city_desc">Nuageux dans l\'ensemble</string>
     <string name="city_temp">17°C</string>
 </resources>
