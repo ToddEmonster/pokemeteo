@@ -1,4 +1,4 @@
-package com.todd.pokemeteo;
+package com.todd.pokemeteo.utils;
 
 public class Util {
     private Util() {}

@@ -1,4 +1,4 @@
-package com.todd.pokemeteo;
+package com.todd.pokemeteo.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.todd.pokemeteo.R;
+import com.todd.pokemeteo.utils.Util;
 
 public class MainActivity extends AppCompatActivity {
 
