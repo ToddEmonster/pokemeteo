@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="lightgrey">#D3D3D3</color>
-    <color name="gainsboro">#DCDCDC</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Theme colors -->
+    <color name="primaryColor">#00796b</color>
+    <color name="primaryLightColor">#48a999</color>
+    <color name="primaryDarkColor">#004c40</color>
+    <color name="secondaryColor">#f44336</color>
+    <color name="secondaryLightColor">#ff7961</color>
+    <color name="secondaryDarkColor">#ba000d</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
 
-    <color name="background_orange">#FFB74D</color>
-    <color name="colorPrimary">#03A9F4</color>
-    <color name="colorPrimaryDark">#0288D1</color>
-    <color name="colorAccent">#FFAB40</color>
+    <color name="backgroundDarkColor">#004D40</color>
+    <color name="cardview_dark_background">@color/darkbrown</color>
 
+
+    <color name="black">#000000</color>
+    <color name="darkgrey">#282828</color>
+    <color name="grey">#83838b</color>
+    <color name="lightgrey">#dee6ee</color>
+    <color name="white">#ffffff</color>
+    <color name="redbrown">#7b4141</color>
+    <color name="lighbrown">#9c7373</color>
+    <color name="darkred">#c54141</color>
+    <color name="brightred">#ff625a</color>
+    <color name="greybrown">#6a5a5a</color>
+    <color name="salmon">#ee9473</color>
+    <color name="beige">#ffbd83</color>
+    <color name="lightbeige">#ffd5b4</color>
+    <color name="darkbrown">#413931</color>
+    <color name="yellow">#ffc55a</color>
+    <color name="darkyellow">#7c5712</color>
+    <color name="darkgreen">#395200</color>
+    <color name="green">#398b31</color>
+    <color name="lightgreen">#b4ff83</color>
+    <color name="bluegreen">#18a46a</color>
+    <color name="lightturquoise">#73c5a4</color>
+    <color name="greyblue">#528bc5</color>
+    <color name="lighblue">#73bdf6</color>
+    <color name="darkblue">#102039</color>
+    <color name="blue">#182952</color>
+    <color name="darkmagenta">#413141</color>
+    <color name="red">#cd4152</color>
 </resources>

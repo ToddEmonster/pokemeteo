@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="88dp"
     android:layout_centerVertical="true"
-    android:background="@color/black"
     android:orientation="horizontal">
     <LinearLayout
         android:layout_width="0dp"
@@ -18,25 +17,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/title"
-            android:textColor="@color/colorPrimaryDark"
             android:text="Montréal" />
         <TextView
             android:id="@+id/text_view_item_city_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/subtitle"
-            android:textColor="@color/colorPrimary"
             android:text="Légères pluies" />
     </LinearLayout>
     <ImageView
         android:id="@+id/text_view_item_city_img"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:minWidth="50dp"
         android:minHeight="50dp"
-        android:background="@color/purple_200"
-        android:layout_marginHorizontal="@dimen/margin_big"
+        android:layout_marginHorizontal="@dimen/margin"
         android:layout_marginVertical="@dimen/margin"
         />
     <TextView
@@ -45,7 +41,6 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="22°C"
-        android:textSize="@dimen/title"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textSize="@dimen/title"/>
 
 </LinearLayout>
