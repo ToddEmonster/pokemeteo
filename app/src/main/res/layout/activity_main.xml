@@ -55,9 +55,11 @@
             android:id="@+id/edit_text_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/big_temp"
             android:layout_centerInParent="true"
-            android:text="@string/votre_message"/>
+            android:layout_marginHorizontal="@dimen/big_temp"
+            android:inputType="text"
+            android:hint="@string/votre_message"
+            />
 
         <Button
             android:id="@+id/button_favoris"
