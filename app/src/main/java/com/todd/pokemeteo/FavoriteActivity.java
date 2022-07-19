@@ -9,12 +9,14 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.todd.pokemeteo.databinding.ActivityFavoriteBinding;
 
 public class FavoriteActivity extends AppCompatActivity {
+    private static final String TAG = "Favorite Activity";
 
     private ActivityFavoriteBinding binding;
     private TextView mTextViewMessageContent;
@@ -44,5 +46,11 @@ public class FavoriteActivity extends AppCompatActivity {
 
         mTextViewMessageContent = findViewById(R.id.text_view_message_content);
         mTextViewMessageContent.setText(extras.getString(Util.EXTRA_MESSAGE));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy()");
     }
 }
