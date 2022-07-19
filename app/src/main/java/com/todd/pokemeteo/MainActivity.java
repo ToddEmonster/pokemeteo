@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Clic sur favoris", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this,FavoriteActivity.class);
-        intent.putExtra("message", mEditTextMessage.getText().toString());
+        intent.putExtra(Util.EXTRA_MESSAGE, mEditTextMessage.getText().toString());
         startActivity(intent);
     }
 }

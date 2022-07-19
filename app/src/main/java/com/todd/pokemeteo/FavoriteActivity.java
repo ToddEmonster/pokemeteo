@@ -43,6 +43,6 @@ public class FavoriteActivity extends AppCompatActivity {
         });
 
         mTextViewMessageContent = findViewById(R.id.text_view_message_content);
-        mTextViewMessageContent.setText(extras.getString("message"));
+        mTextViewMessageContent.setText(extras.getString(Util.EXTRA_MESSAGE));
     }
 }
