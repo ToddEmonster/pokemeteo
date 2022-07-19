@@ -16,7 +16,7 @@
             android:padding="16dp"
             android:background="@color/background_orange">
             <TextView
-                android:id="@+id/text_view_city_name"
+                android:id="@+id/text_view_city_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

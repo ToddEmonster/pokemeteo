@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRelativeLayoutConnection = findViewById(R.id.relative_layout_connection);
         mTextViewNoConnection = findViewById(R.id.text_view_no_connection);
-        mTextViewCityName = findViewById(R.id.text_view_city_name);
+        mTextViewCityName = findViewById(R.id.text_view_city_label);
         mEditTextMessage = findViewById(R.id.edit_text_message);
         mButtonFavoris = findViewById(R.id.button_favoris);
 
