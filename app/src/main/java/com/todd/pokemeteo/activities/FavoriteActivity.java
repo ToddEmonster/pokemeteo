@@ -1,9 +1,13 @@
 package com.todd.pokemeteo.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,8 +55,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
         // Floating Action Button
         FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(this::onClickSearch);
 
         // Items list
         mCities = new ArrayList<>();
@@ -85,6 +88,32 @@ public class FavoriteActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(myIntent);
         return true;
+    }
+
+    public void onClickSearch(View v) {
+//        Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogDarkStyle));
+
+        builder
+                .setTitle("Titre")
+                .setMessage("Message")
+                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        FavoriteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
     }
 
     @Override

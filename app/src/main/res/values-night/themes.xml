@@ -22,11 +22,18 @@
         <item name="colorOnBackground">@color/primaryTextColor</item>
         <item name="colorOnSurface">@color/primaryTextColor</item>
 
+
     </style>
 
     <!-- Dark Theme Action Bar -->
     <style name="MyActionBarDarkStyle" parent="Widget.MaterialComponents.ActionBar.Primary">
         <item name="background">?attr/colorSecondary</item>
     </style>
-    <!-- <style name="TextView" -->
+
+    <!-- Dark Theme Alert Dialog -->
+    <style name="AlertDialogDarkStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="background">@color/darkbrown</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <!-- <style name="TextView" to add a new custom style for a TextView-->
 </resources>
