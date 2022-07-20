@@ -43,6 +43,6 @@
         android:layout_marginEnd="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/baseline_search_20" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

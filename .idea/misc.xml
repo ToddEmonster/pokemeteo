@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/baseline_search_20.xml" value="0.199" />
         <entry key="app/src/main/res/layout-w1240dp/content_favorite.xml" value="0.1" />
         <entry key="app/src/main/res/layout-w1240dp/content_scrolling.xml" value="0.1" />
         <entry key="app/src/main/res/layout-w936dp/content_favorite.xml" value="0.1" />
