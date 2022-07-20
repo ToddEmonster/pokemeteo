@@ -1,6 +1,5 @@
 package com.todd.pokemeteo.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +25,6 @@ public class FavoriteActivity extends AppCompatActivity {
     private static final String TAG = "Favorite Activity";
 
     private ActivityFavoriteBinding binding;
-    private Context mContext;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<City> mCities;
@@ -37,8 +35,6 @@ public class FavoriteActivity extends AppCompatActivity {
 
         binding = ActivityFavoriteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        mContext = getApplicationContext();
 
         Bundle extras = getIntent().getExtras();
 
@@ -76,7 +72,7 @@ public class FavoriteActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new FavoriteAdapter(mContext, mCities);
+        mAdapter = new FavoriteAdapter(this, mCities);
         mRecyclerView.setAdapter(mAdapter);
     }
 

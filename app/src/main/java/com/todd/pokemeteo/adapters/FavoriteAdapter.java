@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
+    private static final String TAG = "Favorite Adapter";
+
     private Context mContext;
     private ArrayList<City> mCities;
 

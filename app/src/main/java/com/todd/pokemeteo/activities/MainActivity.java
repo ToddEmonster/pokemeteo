@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout mRelativeLayoutConnection;
     private TextView mTextViewNoConnection;
 
-    private TextView mTextViewCityName;
+    private TextView mTextViewCityLabel;
     private EditText mEditTextMessage;
     private Button mButtonFavoris;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRelativeLayoutConnection = findViewById(R.id.relative_layout_connection);
         mTextViewNoConnection = findViewById(R.id.text_view_no_connection);
-        mTextViewCityName = findViewById(R.id.text_view_city_label);
+        mTextViewCityLabel = findViewById(R.id.text_view_city_label);
         mEditTextMessage = findViewById(R.id.edit_text_message);
         mButtonFavoris = findViewById(R.id.button_favoris);
 
@@ -49,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
             mButtonFavoris.setOnClickListener(this::onClickFavoris);
 
-            mTextViewCityName.setText(getString(R.string.city_name));
-            Toast.makeText(this, mTextViewCityName.getText(), Toast.LENGTH_SHORT).show();
+            mTextViewCityLabel.setText(getString(R.string.city_name));
+            Toast.makeText(this, mTextViewCityLabel.getText(), Toast.LENGTH_SHORT).show();
         } else {
             mRelativeLayoutConnection.setVisibility(View.INVISIBLE);
             mTextViewNoConnection.setVisibility(View.VISIBLE);
@@ -58,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, mTextViewNoConnection.getText(), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume()");
     }
 
     public void onClickFavoris(View v) {
