@@ -4,25 +4,33 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
     <RelativeLayout
         android:id="@+id/relative_layout_connection"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible">
         <LinearLayout
+            android:id="@+id/linear_layout_current_city"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:orientation="vertical"
             android:padding="16dp"
             android:background="?android:colorPrimary">
             <TextView
-                android:id="@+id/text_view_city_label"
+                android:id="@+id/text_view_city_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="@dimen/big_title"
                 android:textStyle="bold"/>
             <TextView
+                android:id="@+id/text_view_city_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -33,12 +41,14 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <ImageView
+                    android:id="@+id/image_view_city_icon"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/morpheo_sun"
                     android:contentDescription="@string/morpheo" />
                 <TextView
+                    android:id="@+id/text_view_city_temp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

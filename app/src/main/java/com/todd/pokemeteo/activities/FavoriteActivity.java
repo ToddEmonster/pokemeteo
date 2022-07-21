@@ -2,7 +2,6 @@ package com.todd.pokemeteo.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,24 +9,25 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.todd.pokemeteo.R;
 import com.todd.pokemeteo.adapters.FavoriteAdapter;
 import com.todd.pokemeteo.databinding.ActivityFavoriteBinding;
+import com.todd.pokemeteo.databinding.DialogAddFavoriteBinding;
 import com.todd.pokemeteo.models.City;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
+
+import api.API;
 
 public class FavoriteActivity extends AppCompatActivity {
     private static final String TAG = "Favorite Activity";
@@ -35,8 +35,10 @@ public class FavoriteActivity extends AppCompatActivity {
     private ActivityFavoriteBinding binding;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private FavoriteAdapter mAdapter;
+
+    private City mCityRemoved;
+    private int mPositionCityRemoved;
 
     private ArrayList<City> mCities;
     private Context mContext;
@@ -44,98 +46,86 @@ public class FavoriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityFavoriteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Toolbar toolbar = binding.toolbar;
-        setSupportActionBar(toolbar);
-        CollapsingToolbarLayout toolBarLayout = binding.toolbarLayout;
-//        toolBarLayout.setTitle(getTitle());
 
         mContext = this;
 
-        // Return button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        setSupportActionBar(binding.toolbar);
+        binding.toolbarLayout.setTitle(getTitle());
 
-        // Floating Action Button
-        FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(this::onClickSearch);
+        binding.fab.setOnClickListener(view -> showAlertDialog());
 
-        // Items list
         mCities = new ArrayList<>();
 
-        City city1 = new City("Antananarivo", "Nuageux", "17°C", R.drawable.morpheo_cloud);
-        City city2 = new City("Barcelone", "Ensoleillé", "28°C", R.drawable.morpheo_sun);
-        City city3 = new City("Chongqing", "Légères pluies", "24°C", R.drawable.nenupiot_drizzle);
-        City city4 = new City("New Delhi", "Pluies modérées", "29°C", R.drawable.morpheo_rain);
-
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-
-        // Recycler View
-        mRecyclerView = findViewById(R.id.favorite_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView = binding.include.recyclerView;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-
-        mAdapter = new FavoriteAdapter(this, mCities);
+        mAdapter = new FavoriteAdapter(mContext, mCities);
         mRecyclerView.setAdapter(mAdapter);
+
+        ItemTouchHelper itemTouchHelper = createItemTouchHelper();
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
-    public void onClickSearch(View v) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(
+
+    private ItemTouchHelper createItemTouchHelper() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+                mPositionCityRemoved = viewHolder.getAdapterPosition();
+                mCityRemoved = mCities.remove(mPositionCityRemoved);
+
+                mAdapter.notifyDataSetChanged();
+
+                Snackbar.make(binding.myCoordinatorLayout, mCityRemoved.mName + " est supprimé", Snackbar.LENGTH_LONG)
+                        .setAction("Annuler", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mCities.add(mPositionCityRemoved, mCityRemoved);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .show();
+
+            }
+        });
+        return itemTouchHelper;
+    }
+
+    public void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(mContext, R.style.AlertDialogDarkStyle)
         );
+        DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
+        builder.setView(dialogBinding.getRoot());
 
-        /* // Méthode 1 : à la mano
-        builder
-                .setTitle("Titre")
-                .setMessage("Message")
-                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close
-                        // current activity
-                        FavoriteActivity.this.finish();
-                    }
-                })
-                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, just close
-                        // the dialog box and do nothing
-                        dialog.cancel();
-                    }
-                });
-        */
-
-        // Méthode 2 : custom dialog
-        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_favorite, null) ;
-        final EditText editTextCity = (EditText) dialogView.findViewById(R.id.edit_text_dialog_city);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (editTextCity.getText().toString().length() > 0) {
-                    updateWeatherDataFromCityName(editTextCity.getText().toString());
-                }
-            }
+        builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+            String cityName = dialogBinding.editTextDialogCity.getText().toString();
+            callAPIWithCityName(cityName);
         });
+        builder.setNegativeButton(R.string.dialog_annuler, null);
 
-        builder.setNegativeButton(R.string.dialog_annuler, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-
-        builder.create().show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
-    public void updateWeatherDataFromCityName(final String newCityName) {
-        // TODO : appel API pour récupérer la ville avec ses données météo à partir de newCityName
-        City newCity = new City(newCityName, "Neige", "-2°C", R.drawable.sorbebe_snow);
-        mCities.add(newCity);
-        mAdapter.notifyDataSetChanged();
+    private void callAPIWithCityName(String cityName) {
+        API.callApiGetByCityName(cityName, this, this::renderFavoriteCity);
+    }
+
+    public void renderFavoriteCity(String strJson) {
+        try {
+            City favoriteCity = new City(strJson);
+            mCities.add(favoriteCity);
+            mAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+        }
     }
 
     /**
