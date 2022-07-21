@@ -22,12 +22,22 @@ public class API {
     public static final String OPEN_WEATHER_MAP_API_FAVOURITE = "http://api.openweathermap.org/data/2.5/group?id=%s&units=metric&lang=fr&appid=01897e497239c8aff78d9b8538fb24ea";
     public static final String OPEN_WEATHER_MAP_API_FORECAST = "http://api.openweathermap.org/data/2.5/forecast/daily?id=%s&units=metric&cnt=5&lang=fr&appid=01897e497239c8aff78d9b8538fb24ea";
 
+    public static final String GEODB_API_CITY_SEARCH = "http://geodb-free-service.wirefreethought.com/v1/some/geodb/endpoint?cities&types=CITY&namePrefix=%s...";
+
+
     private static OkHttpClient okHttpClient = new OkHttpClient();
     private static Handler handler = new Handler();
 
     // Coordonnées de Antananarivo, Madagascar
     public static final double defaultLat = -18.9137;
     public static final double defaultLon = 47.5361;
+
+    public static void callApiGetCitiesBySearch(String inputCityName, Context context, ApiCallBack callback) {
+        String[] params = { String.valueOf(inputCityName) };
+        String callUrl = String.format(GEODB_API_CITY_SEARCH, params);
+
+        callApiGet(callback, context, callUrl);
+    }
 
     public static void callApiGetByCityName(String cityName, Context context, ApiCallBack callback) {
         String[] params = { String.valueOf(cityName) };
@@ -57,7 +67,7 @@ public class API {
                 Log.d("TAG", "sendApiCall.onResponse()");
                 if (response.isSuccessful()) {
                     final String strJson = response.body().string();
-                    Log.d("TAG", strJson);
+                    Log.d("API CALL RESULTS", strJson);
                     handler.post(() -> callback.execute(strJson));
                 } else {
                     handler.post(() -> callback.error(context,"erreur à l'appel d'API"));

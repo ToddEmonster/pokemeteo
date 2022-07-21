@@ -23,9 +23,12 @@ import com.todd.pokemeteo.databinding.ActivityFavoriteBinding;
 import com.todd.pokemeteo.databinding.DialogAddFavoriteBinding;
 import com.todd.pokemeteo.models.City;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import api.API;
 
@@ -105,6 +108,18 @@ public class FavoriteActivity extends AppCompatActivity {
         DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
         builder.setView(dialogBinding.getRoot());
 
+        // 1. Ecouter lorsque inputCityName.length > 1
+
+        // 2. Si oui, alors appeler callApiSearchWithCityNameInput(inputCityName);
+
+        // 3. Avec les résultats : désérializer et pour chacun des trois premiers éléments de la liste de `data`
+        //  - créer un item
+        //  - afficher l'item
+        //  - écouter un éventuel clic sur l'item
+
+        // 4. OnClickCityAutocomplete -> dialogBinding.editTextDialogCity.setText(cityClicked.mName);
+
+
         builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
             String cityName = dialogBinding.editTextDialogCity.getText().toString();
             callAPIWithCityName(cityName);
@@ -115,8 +130,35 @@ public class FavoriteActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void callApiSearchWithCityNameInput(String cityNameInput) {
+        API.callApiGetByCityName(cityNameInput, this, this::renderAutocompleteCities);
+    }
+
     private void callAPIWithCityName(String cityName) {
         API.callApiGetByCityName(cityName, this, this::renderFavoriteCity);
+    }
+
+    public void renderAutocompleteCities(String strJson) {
+        try {
+            // TODO : deserialize strJson.data qui renvoie une liste de Cities de type
+            JSONObject json = new JSONObject(strJson);
+            JSONArray data = json.getJSONArray("data");
+            ArrayList<JSONObject> citiesAutocomplete = new ArrayList();
+
+
+            while (iterator.hasNext()) {
+                JSONObject object = iterator.next();
+
+                list.add(object.get("Name") + "/" + object.get("Weight"));
+            }
+
+            ArrayList<JSONObject> firstThreeCities = data.
+
+            //City favoriteCity = new City(strJson);
+            //mCities.add(favoriteCity);
+            //mAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+        }
     }
 
     public void renderFavoriteCity(String strJson) {
