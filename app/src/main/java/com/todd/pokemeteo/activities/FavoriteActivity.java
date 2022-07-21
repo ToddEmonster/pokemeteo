@@ -1,6 +1,7 @@
 package com.todd.pokemeteo.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
@@ -31,9 +33,13 @@ public class FavoriteActivity extends AppCompatActivity {
     private static final String TAG = "Favorite Activity";
 
     private ActivityFavoriteBinding binding;
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     private ArrayList<City> mCities;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +47,12 @@ public class FavoriteActivity extends AppCompatActivity {
 
         binding = ActivityFavoriteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        Bundle extras = getIntent().getExtras();
-
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = binding.toolbarLayout;
 //        toolBarLayout.setTitle(getTitle());
+
+        mContext = this;
 
         // Return button
         ActionBar actionBar = getSupportActionBar();
@@ -80,22 +85,10 @@ public class FavoriteActivity extends AppCompatActivity {
         mAdapter = new FavoriteAdapter(this, mCities);
         mRecyclerView.setAdapter(mAdapter);
     }
-
-    /**
-     * Methode appelée automatiquement lors du clic sur le bouton Retour dans la toolbar
-     * @param item  l'item cliqué
-     * @return un booleen
-     */
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(myIntent);
-        return true;
-    }
-
     public void onClickSearch(View v) {
-//        Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogDarkStyle));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.AlertDialogDarkStyle)
+        );
 
         /* // Méthode 1 : à la mano
         builder
@@ -118,12 +111,44 @@ public class FavoriteActivity extends AppCompatActivity {
         */
 
         // Méthode 2 : custom dialog
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_favorite, null) ;
-        final EditText editTextCity = (EditText) v.findViewById(R.id.edit_text_dialog_city) ;
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_favorite, null) ;
+        final EditText editTextCity = (EditText) dialogView.findViewById(R.id.edit_text_dialog_city);
         builder.setView(dialogView);
+
+        builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (editTextCity.getText().toString().length() > 0) {
+                    updateWeatherDataFromCityName(editTextCity.getText().toString());
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.dialog_annuler, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
 
         builder.create().show();
     }
+
+    public void updateWeatherDataFromCityName(final String newCityName) {
+        // TODO : appel API pour récupérer la ville avec ses données météo à partir de newCityName
+        City newCity = new City(newCityName, "Neige", "-2°C", R.drawable.sorbebe_snow);
+        mCities.add(newCity);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Methode appelée automatiquement lors du clic sur le bouton Retour dans la toolbar
+     * @param item  l'item cliqué
+     * @return un booleen
+     */
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(myIntent);
+        return true;
+    }
+
 
     @Override
     protected void onDestroy() {
