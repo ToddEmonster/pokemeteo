@@ -11,4 +11,6 @@
     <string name="message">Message :</string>
     <string name="votre_message">Your message</string>
     <string name="ajouter_une_ville">Ajouter une ville</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_annuler">Annuler</string>
 </resources>

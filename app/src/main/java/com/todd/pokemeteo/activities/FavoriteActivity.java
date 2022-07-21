@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,6 +97,7 @@ public class FavoriteActivity extends AppCompatActivity {
 //                .setAction("Action", null).show();
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogDarkStyle));
 
+        /* // Méthode 1 : à la mano
         builder
                 .setTitle("Titre")
                 .setMessage("Message")
@@ -112,6 +115,12 @@ public class FavoriteActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
+        */
+
+        // Méthode 2 : custom dialog
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_favorite, null) ;
+        final EditText editTextCity = (EditText) v.findViewById(R.id.edit_text_dialog_city) ;
+        builder.setView(dialogView);
 
         builder.create().show();
     }

@@ -12,4 +12,6 @@
     <string name="title_activity_favorite">FavoriteActivity</string>
     <string name="action_settings">Paramètres</string>
     <string name="ajouter_une_ville">Ajouter une ville</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_annuler">Annuler</string>
 </resources>
