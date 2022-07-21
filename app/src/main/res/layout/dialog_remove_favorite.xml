@@ -11,6 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:hint="@string/ajouter_ville"/>
+        android:hint="@string/supprimer_ville"/>
 
 </LinearLayout>

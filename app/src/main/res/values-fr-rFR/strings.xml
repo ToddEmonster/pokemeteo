@@ -11,7 +11,8 @@
     <string name="votre_message">Votre message</string>
     <string name="title_activity_favorite">FavoriteActivity</string>
     <string name="action_settings">Paramètres</string>
-    <string name="ajouter_une_ville">Ajouter une ville</string>
+    <string name="ajouter_ville">Ajouter une ville</string>
+    <string name="supprimer_ville">Supprimer une ville</string>
     <string name="dialog_ok">Ok</string>
     <string name="dialog_annuler">Annuler</string>
 </resources>

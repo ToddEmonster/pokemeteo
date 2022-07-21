@@ -87,7 +87,7 @@ public class FavoriteActivity extends AppCompatActivity {
     }
     public void onClickSearch(View v) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.AlertDialogDarkStyle)
+                new ContextThemeWrapper(mContext, R.style.AlertDialogDarkStyle)
         );
 
         /* // Méthode 1 : à la mano

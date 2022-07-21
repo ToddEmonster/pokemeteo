@@ -1,9 +1,13 @@
 package com.todd.pokemeteo.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +32,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     }
 
     // Classe holder qui contient la vue d'un item
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         private TextView mTextViewCityName;
         private TextView mTextViewCityDescription;
@@ -39,11 +43,40 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            itemView.setOnLongClickListener(this);
+            itemView.setTag(this);
+
             mTextViewCityName = itemView.findViewById(R.id.text_view_item_city_name);
             mTextViewCityDescription = itemView.findViewById(R.id.text_view_item_city_desc);
             mTextViewCityTemp = itemView.findViewById(R.id.text_view_item_city_temp);
             mTextViewCityImage = itemView.findViewById(R.id.text_view_item_city_img);
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(mContext, R.style.AlertDialogDarkStyle)
+            );
+
+            builder
+                    .setMessage(String.format("Voulez-vous supprimer la ville \"%s\" ?", mTextViewCityName.getText()))
+                    .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            mCities.remove(getBindingAdapterPosition());
+                            notifyDataSetChanged();
+                            notifyItemRemoved(getBindingAdapterPosition());
+                            notifyItemRangeChanged(getBindingAdapterPosition(), mCities.size());
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_annuler, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) { }
+                    });
+
+            builder.create().show();
+            return false;
+        }
+
     }
 
     @NonNull
@@ -57,6 +90,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull FavoriteAdapter.ViewHolder holder, int position) {
         City city = mCities.get(position);
+
+        // No need for `holder.position = position;` because done auto inside library : Holder class has getBindingAdapterPosition()
         holder.mTextViewCityName.setText(city.mName);
         holder.mTextViewCityDescription.setText(city.mDescription);
         holder.mTextViewCityTemp.setText(city.mTemperature);
