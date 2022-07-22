@@ -4,10 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.todd.pokemeteo.utils.Secret;
-
-import org.json.JSONObject;
-
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -18,7 +14,6 @@ import okhttp3.Response;
 
 public class API {
     public static final String OPEN_WEATHER_API_KEY = "01897e497239c8aff78d9b8538fb24ea";
-    public static final String GEODB_API_KEY = Secret.RAPID_API_APP_KEY;
 
     public static final String OPEN_WEATHER_MAP_API_COORDINATES = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric&lang=fr&appid=" + OPEN_WEATHER_API_KEY;
     public static final String OPEN_WEATHER_MAP_API_CITY_NAME = "http://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&lang=fr&appid=" + OPEN_WEATHER_API_KEY;
@@ -36,27 +31,25 @@ public class API {
         String[] params = { String.valueOf(inputCityName) };
         String callUrl = String.format(GEODB_API_CITY_SEARCH, params);
 
-        callApiGet(callback, context, callUrl, true);
+        callApiGet(callback, context, callUrl);
     }
 
     public static void callApiGetByCityName(String cityName, Context context, ApiCallBack callback) {
         String[] params = { String.valueOf(cityName) };
         String callUrl = String.format(OPEN_WEATHER_MAP_API_CITY_NAME, params);
 
-        callApiGet(callback, context, callUrl, false);
+        callApiGet(callback, context, callUrl);
     }
 
     public static void callApiGetByCoordinates(double latitude, double longitude, Context context, ApiCallBack callback) {
         String[] params = { String.valueOf(latitude), String.valueOf(longitude) };
 
         String callUrl = String.format(OPEN_WEATHER_MAP_API_COORDINATES, params);
-        callApiGet(callback, context, callUrl, false);
+        callApiGet(callback, context, callUrl);
     }
 
-    public static void callApiGet(ApiCallBack callback, Context context, String callUrl, boolean needsGeoDBKey) {
-        Request request = needsGeoDBKey
-                ? new Request.Builder().url(callUrl).addHeader("x-rapidapi-key", GEODB_API_KEY).build()
-                : new Request.Builder().url(callUrl).build();
+    public static void callApiGet(ApiCallBack callback, Context context, String callUrl) {
+        Request request = new Request.Builder().url(callUrl).build();
 
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
