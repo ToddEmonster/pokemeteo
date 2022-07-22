@@ -31,6 +31,30 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         this.mCities = mCities;
     }
 
+    @NonNull
+    @Override
+    public FavoriteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(mContext).inflate(R.layout.item_favorite_city, parent, false);
+        ViewHolder viewHolder = new ViewHolder(v);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull FavoriteAdapter.ViewHolder holder, int position) {
+        City city = mCities.get(position);
+
+        // No need for `holder.position = position;` because done auto inside library : Holder class has getBindingAdapterPosition()
+        holder.mTextViewCityName.setText(city.mName);
+        holder.mTextViewCityDescription.setText(city.mDescription);
+        holder.mTextViewCityTemp.setText(city.mTemperature);
+        holder.mTextViewCityImage.setImageResource(city.mWeatherResIconGrey);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mCities.size();
+    }
+
     // Classe holder qui contient la vue d'un item
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
@@ -77,30 +101,5 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             return false;
         }
 
-    }
-
-    @NonNull
-    @Override
-    public FavoriteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.item_favorite_city, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull FavoriteAdapter.ViewHolder holder, int position) {
-        City city = mCities.get(position);
-
-        // No need for `holder.position = position;` because done auto inside library : Holder class has getBindingAdapterPosition()
-        holder.mTextViewCityName.setText(city.mName);
-        holder.mTextViewCityDescription.setText(city.mDescription);
-        holder.mTextViewCityTemp.setText(city.mTemperature);
-        holder.mTextViewCityImage.setImageResource(city.mWeatherResIconGrey);
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return mCities.size();
     }
 }

@@ -4,11 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,13 +25,15 @@ import com.todd.pokemeteo.adapters.FavoriteAdapter;
 import com.todd.pokemeteo.databinding.ActivityFavoriteBinding;
 import com.todd.pokemeteo.databinding.DialogAddFavoriteBinding;
 import com.todd.pokemeteo.models.City;
+import com.todd.pokemeteo.models.CityAutocomplete;
+import com.todd.pokemeteo.utils.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import api.API;
 
@@ -46,6 +51,8 @@ public class FavoriteActivity extends AppCompatActivity {
     private ArrayList<City> mCities;
     private Context mContext;
 
+    private ArrayList<CityAutocomplete> mCitiesAutocomplete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +68,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
         mCities = new ArrayList<>();
 
+        // Recycler View
         mRecyclerView = binding.include.recyclerView;
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -69,6 +77,112 @@ public class FavoriteActivity extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = createItemTouchHelper();
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    /** Ouvre la modale d'ajout de villes */
+    public void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.AlertDialogDarkStyle));
+        DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
+        builder.setView(dialogBinding.getRoot());
+
+        // Initialisation à vide de la liste d'autocomplete
+        mCitiesAutocomplete = new ArrayList();
+
+        // Ecouter l'input utilisateur
+        dialogBinding.editTextDialogCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Auto-generated method stub
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Auto-generated method stub
+            }
+
+            // Ici lorsque le texte change
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Action si le texte a au moins 3 caractères
+                if (s.length() >= Util.AUTOCOMPLETE_DEFAULT_MIN_CHAR) {
+                    Log.d("DEMO", "plus de 3 char !");
+                    callApiSearchWithCityNameInput(s.toString());
+                }
+            }
+        });
+
+        // Construction du reste du Dialog
+        builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                    String cityName = dialogBinding.editTextDialogCity.getText().toString();
+                    callAPIWithCityName(cityName);
+                });
+        builder.setNegativeButton(R.string.dialog_annuler, null);
+
+        // Rendering du Dialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    // Appelle l'API externe pour rechercher une ville
+    private void callApiSearchWithCityNameInput(String cityNameInput) {
+        API.callApiGetCitiesBySearch(cityNameInput, this, this::renderAutocompleteCities);
+    }
+
+    // Callback de la recherche de villes
+    public void renderAutocompleteCities(String strJson) {
+        try {
+            // Récupérer le binding de la Dialog
+            // FIXME double call
+            DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
+
+            // Récupérer la donnée JSON
+            JSONObject json = new JSONObject(strJson);
+            JSONArray data = json.getJSONArray("data");
+
+            List<String> mCitiesAutocompleteStrings = new ArrayList<>();
+
+            int i = 0;
+            // Prendre les trois premières valeurs du tableau de JSONArray
+            while (i < Util.AUTOCOMPLETE_DEFAULT_LIMIT) {
+                JSONObject cityJson = data.getJSONObject(i);
+                // Caster en POJO
+                CityAutocomplete cityAutocomplete = new CityAutocomplete(cityJson.toString());
+                Log.d("DEMO", String.format("New city created: %s", cityAutocomplete));
+                mCitiesAutocomplete.add(cityAutocomplete);
+
+                // Caster en String
+                String autocompleteCity = String.format("%s, %s", cityAutocomplete.mName, cityAutocomplete.mCountry);
+                mCitiesAutocompleteStrings.add(autocompleteCity);
+                i++;
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    mContext,
+                    android.R.layout.simple_dropdown_item_1line,
+                    mCitiesAutocompleteStrings);
+            dialogBinding.autocompleteTextViewCities.setAdapter(adapter);
+
+            // TODO : Ecouter le clic -> dialogBinding.editTextDialogCity.setText(cityClicked.mName);
+            dialogBinding.autocompleteTextViewCities.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // CityAutocomplete cityClicked = mCitiesAutocomplete();
+                    dialogBinding.editTextDialogCity.setText(cityClicked.mName);
+                }
+            });
+        } catch (JSONException e) { }
+    }
+
+    private void callAPIWithCityName(String cityName) {
+        API.callApiGetByCityName(cityName, this, this::renderFavoriteCity);
+    }
+
+    public void renderFavoriteCity(String strJson) {
+        try {
+            City favoriteCity = new City(strJson);
+            mCities.add(favoriteCity);
+            mAdapter.notifyDataSetChanged();
+        } catch (JSONException e) { }
     }
 
     private ItemTouchHelper createItemTouchHelper() {
@@ -95,80 +209,11 @@ public class FavoriteActivity extends AppCompatActivity {
                             }
                         })
                         .show();
-
             }
         });
         return itemTouchHelper;
     }
 
-    public void showAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(mContext, R.style.AlertDialogDarkStyle)
-        );
-        DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
-        builder.setView(dialogBinding.getRoot());
-
-        // 1. Ecouter lorsque inputCityName.length > 1
-
-        // 2. Si oui, alors appeler callApiSearchWithCityNameInput(inputCityName);
-
-        // 3. Avec les résultats : désérializer et pour chacun des trois premiers éléments de la liste de `data`
-        //  - créer un item
-        //  - afficher l'item
-        //  - écouter un éventuel clic sur l'item
-
-        // 4. OnClickCityAutocomplete -> dialogBinding.editTextDialogCity.setText(cityClicked.mName);
-
-
-        builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-            String cityName = dialogBinding.editTextDialogCity.getText().toString();
-            callAPIWithCityName(cityName);
-        });
-        builder.setNegativeButton(R.string.dialog_annuler, null);
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    private void callApiSearchWithCityNameInput(String cityNameInput) {
-        API.callApiGetByCityName(cityNameInput, this, this::renderAutocompleteCities);
-    }
-
-    private void callAPIWithCityName(String cityName) {
-        API.callApiGetByCityName(cityName, this, this::renderFavoriteCity);
-    }
-
-    public void renderAutocompleteCities(String strJson) {
-        try {
-            // TODO : deserialize strJson.data qui renvoie une liste de Cities de type
-            JSONObject json = new JSONObject(strJson);
-            JSONArray data = json.getJSONArray("data");
-            ArrayList<JSONObject> citiesAutocomplete = new ArrayList();
-
-
-            while (iterator.hasNext()) {
-                JSONObject object = iterator.next();
-
-                list.add(object.get("Name") + "/" + object.get("Weight"));
-            }
-
-            ArrayList<JSONObject> firstThreeCities = data.
-
-            //City favoriteCity = new City(strJson);
-            //mCities.add(favoriteCity);
-            //mAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-        }
-    }
-
-    public void renderFavoriteCity(String strJson) {
-        try {
-            City favoriteCity = new City(strJson);
-            mCities.add(favoriteCity);
-            mAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-        }
-    }
 
     /**
      * Methode appelée automatiquement lors du clic sur le bouton Retour dans la toolbar
@@ -179,12 +224,5 @@ public class FavoriteActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(myIntent);
         return true;
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy()");
     }
 }

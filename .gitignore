@@ -10,6 +10,8 @@
 .DS_Store
 /build
 /captures
-.externalNativeBuild
+.externalNatsiveBuild
 .cxx
 local.properties
+
+/**/*/Secret.java

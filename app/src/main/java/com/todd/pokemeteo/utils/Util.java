@@ -13,6 +13,8 @@ public class Util {
     public final static String CITIES = "cities";
     public static final String CITY = "city";
     public static final String KEY_MESSAGE = "key_message";
+    public static final int AUTOCOMPLETE_DEFAULT_LIMIT = 3;
+    public static final int AUTOCOMPLETE_DEFAULT_MIN_CHAR = 3;
 
 
     /*
