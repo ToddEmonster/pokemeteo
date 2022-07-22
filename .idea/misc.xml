@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../Library/Android/sdk/platforms/android-32/data/res/layout/simple_dropdown_item_1line.xml" value="0.20606884057971014" />
         <entry key="app/src/main/res/drawable/baseline_search_20.xml" value="0.199" />
         <entry key="app/src/main/res/layout-w1240dp/content_favorite.xml" value="0.1" />
         <entry key="app/src/main/res/layout-w1240dp/content_scrolling.xml" value="0.1" />

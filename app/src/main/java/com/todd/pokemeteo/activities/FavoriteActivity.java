@@ -33,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import api.API;
 
@@ -41,6 +40,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private static final String TAG = "Favorite Activity";
 
     private ActivityFavoriteBinding binding;
+    private DialogAddFavoriteBinding dialogBinding;
 
     private RecyclerView mRecyclerView;
     private FavoriteAdapter mAdapter;
@@ -51,7 +51,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private ArrayList<City> mCities;
     private Context mContext;
 
-    private ArrayList<CityAutocomplete> mCitiesAutocomplete;
+    private ArrayAdapter<String> mAutocompleteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +82,18 @@ public class FavoriteActivity extends AppCompatActivity {
     /** Ouvre la modale d'ajout de villes */
     public void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.AlertDialogDarkStyle));
-        DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
+        dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
         builder.setView(dialogBinding.getRoot());
 
-        // Initialisation à vide de la liste d'autocomplete
-        mCitiesAutocomplete = new ArrayList();
+        // Création d'un adapter pour la liste
+        mAutocompleteAdapter = new ArrayAdapter<String>(
+                mContext,
+                android.R.layout.simple_dropdown_item_1line,
+                new ArrayList<>());
+        dialogBinding.autocompleteTextViewCities.setAdapter(mAutocompleteAdapter);
 
         // Ecouter l'input utilisateur
-        dialogBinding.editTextDialogCity.addTextChangedListener(new TextWatcher() {
+        dialogBinding.autocompleteTextViewCities.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 // Auto-generated method stub
@@ -104,26 +108,24 @@ public class FavoriteActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Action si le texte a au moins 3 caractères
-                if (s.length() >= Util.AUTOCOMPLETE_DEFAULT_MIN_CHAR) {
+                String formattedInput = s.toString().trim();
+                Log.d("TEXT", String.format("Charsequence: %s", formattedInput));
                     Log.d("DEMO", "plus de 3 char !");
-                    callApiSearchWithCityNameInput(s.toString());
-                }
+                    callApiSearchWithCityNameInput(formattedInput);
             }
         });
 
-        // Construction du reste du Dialog
         builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-                    String cityName = dialogBinding.editTextDialogCity.getText().toString();
+                    String cityName = dialogBinding.autocompleteTextViewCities.getText().toString().toLowerCase();
                     callAPIWithCityName(cityName);
                 });
         builder.setNegativeButton(R.string.dialog_annuler, null);
 
-        // Rendering du Dialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    // Appelle l'API externe pour rechercher une ville
+    // Appelle à l'API externe pour rechercher une ville
     private void callApiSearchWithCityNameInput(String cityNameInput) {
         API.callApiGetCitiesBySearch(cityNameInput, this, this::renderAutocompleteCities);
     }
@@ -131,45 +133,26 @@ public class FavoriteActivity extends AppCompatActivity {
     // Callback de la recherche de villes
     public void renderAutocompleteCities(String strJson) {
         try {
-            // Récupérer le binding de la Dialog
-            // FIXME double call
-            DialogAddFavoriteBinding dialogBinding = DialogAddFavoriteBinding.inflate(LayoutInflater.from(mContext));
-
             // Récupérer la donnée JSON
             JSONObject json = new JSONObject(strJson);
             JSONArray data = json.getJSONArray("data");
 
-            List<String> mCitiesAutocompleteStrings = new ArrayList<>();
+            mAutocompleteAdapter.clear();
 
             int i = 0;
-            // Prendre les trois premières valeurs du tableau de JSONArray
+            // Prendre les n premières valeurs du tableau de JSONArray
             while (i < Util.AUTOCOMPLETE_DEFAULT_LIMIT) {
                 JSONObject cityJson = data.getJSONObject(i);
                 // Caster en POJO
                 CityAutocomplete cityAutocomplete = new CityAutocomplete(cityJson.toString());
                 Log.d("DEMO", String.format("New city created: %s", cityAutocomplete));
-                mCitiesAutocomplete.add(cityAutocomplete);
 
-                // Caster en String
-                String autocompleteCity = String.format("%s, %s", cityAutocomplete.mName, cityAutocomplete.mCountry);
-                mCitiesAutocompleteStrings.add(autocompleteCity);
+                // Ajouter le String à afficher
+                mAutocompleteAdapter.add(cityAutocomplete.mName);
                 i++;
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    mContext,
-                    android.R.layout.simple_dropdown_item_1line,
-                    mCitiesAutocompleteStrings);
-            dialogBinding.autocompleteTextViewCities.setAdapter(adapter);
-
-            // TODO : Ecouter le clic -> dialogBinding.editTextDialogCity.setText(cityClicked.mName);
-            dialogBinding.autocompleteTextViewCities.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // CityAutocomplete cityClicked = mCitiesAutocomplete();
-                    dialogBinding.editTextDialogCity.setText(cityClicked.mName);
-                }
-            });
+            // Ecoute du clic : gestion auto par le composant
         } catch (JSONException e) { }
     }
 
